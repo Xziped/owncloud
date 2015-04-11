@@ -1,15 +1,13 @@
 FROM php:5.6-apache
+MAINTAINER xziped <xzip@mail.ownsync.at>
 
 ENV WWW_ROOT /var/www/html
 ENV OC_VERS owncloud-8.0.2
+ENV BIN_ROOT /var/www/bin
+ENV APACHE_BIN /usr/sbin/apache2
+ENV PATH $PATH:$BIN_ROOT:/usr/sbin:/usr/bin:/sbin:/bin
 
-# COPY src/ $WWW_ROOT/
 COPY config/php.ini /usr/local/etc/php/php.ini
-
-
-# COPY /debug/whoami.php $WWW_ROOT/whoami.php
-# COPY /debug/info.php $WWW_ROOT/info.php
-
 
 RUN apt-get update && apt-get install -y \
 	zlib1g-dev \
@@ -40,13 +38,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR $WWW_ROOT
 
-RUN wget https://download.owncloud.org/community/$OC_VERS.zip \
-	&& unzip $OC_VERS.zip \
-	&& rm -f $OC_VERS.zip \
-	&& mkdir -p $WWW_ROOT/owncloud/data \
-	&& chown -R www-data:www-data $WWW_ROOT/owncloud/data
+COPY ./run $BIN_ROOT/run
 
-VOLUME ["$WWW_ROOT", "/etc/apache2"]
 EXPOSE 80 443
+
+CMD ["start"]
+ENTRYPOINT ["run"]
 
 

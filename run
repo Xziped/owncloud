@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+# Download and install owncloud
+case "$@" in
+    start)
+
+	if [ -d $WWW_ROOT/owncloud/data ]; then
+	echo "found exsisting data-volume"
+	else
+        echo "downloading and installing owncloud..."
+	wget --no-check-certificate https://download.owncloud.org/community/$OC_VERS.zip
+	unzip $OC_VERS.zip
+	rm -f $OC_VERS.zip
+	mkdir -p $WWW_ROOT/owncloud/data
+	chown -R www-data:www-data $WWW_ROOT/owncloud/data
+	fi
+	exec $APACHE_BIN "-D FOREGROUND" &
+	exec "/bin/bash"
+	child=$!
+        wait $child
+
+    ;;
+    shell)
+        exec "/bin/bash"
+    ;;
+esac

@@ -44,5 +44,3 @@ EXPOSE 80 443
 
 CMD ["start"]
 ENTRYPOINT ["run"]
-
-

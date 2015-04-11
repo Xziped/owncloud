@@ -48,7 +48,7 @@ COPY ssl/000-default.conf $APACHE_ENABLE/000-default.conf
 COPY ssl/default.conf $APACHE_AVAIL/default.conf
 COPY ssl/default-ssl.conf $APACHE_AVAIL/default-ssl.conf
 
-EXPOSE 80 443
+EXPOSE 443
 
 CMD ["start"]
 ENTRYPOINT ["run"]

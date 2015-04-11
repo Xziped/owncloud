@@ -15,8 +15,6 @@ mkdir -p /opt/owncloud/http
 mkdir -p /opt/owncloud/ssl
 
 # run owncloud on https://$HOST_NAME:443 with owncloud datadir /opt/http/ownclud and mysql datadir /opt/mysql/owncloud
-docker run -dit -p 443:443 --name owncloud -e HOST_NAME=localhost -e EMAIL=xzip@mail.ownsync.at \
--v /opt/owncloud/http:/var/www/html/owncloud -v /opt/owncloud/ssl:/var/www/ssl \
---link mysql_owncloud:mysql xziped/owncloud
+docker run -dit -p 443:443 --name owncloud -e HOST_NAME=localhost -v /opt/owncloud/http:/var/www/html/owncloud -v /opt/owncloud/ssl:/var/www/ssl --link mysql_owncloud:mysql xziped/owncloud
 ```
 

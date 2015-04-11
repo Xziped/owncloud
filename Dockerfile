@@ -46,6 +46,7 @@ RUN wget https://download.owncloud.org/community/$OC_VERS.zip \
 	&& mkdir -p $WWW_ROOT/owncloud/data \
 	&& chown -R www-data:www-data $WWW_ROOT/owncloud/data
 
-
+VOLUME ["$WWW_ROOT", "/etc/apache2"]
+EXPOSE 80 443
 
 

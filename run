@@ -1,10 +1,38 @@
 #!/bin/bash
 set -e
 
+create_cert() {
+
+	if [ ! -d $SSL_ROOT ]; then
+	mkdir -p $SSL_ROOT
+	if [ -a $SSL_ROOT/server.key ]; then
+	echo "found exsisting server key"
+	else
+	openssl genrsa -out $SSL_ROOT/server.key 4096
+	openssl req -new -key $SSL_ROOT/server.key -out $SSL_ROOT/server.csr <<EOT
+	AT
+	AT
+	Vienna
+	owncloud
+	apache
+	$HOST_NAME
+	$EMAIL
+	.
+	.
+EOT
+	openssl x509 -req -days 365 -in $SSL_ROOT/server.csr -signkey $SSL_ROOT/server.key -out $SSL_ROOT/server.crt
+	chmod 400 $SSL_ROOT/server.key
+	fi
+	fi
+	a2enmod ssl
+
+}
+
 # Download and install owncloud
 case "$@" in
     start)
-
+	
+	create_cert
 	if [ -d $WWW_ROOT/owncloud/data ]; then
 	echo "found exsisting data-volume"
 	else
@@ -20,6 +48,9 @@ case "$@" in
 	child=$!
         wait $child
 
+    ;;
+    cert)
+	create_cert
     ;;
     shell)
         exec "/bin/bash"

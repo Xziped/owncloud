@@ -4,8 +4,13 @@ MAINTAINER xziped <xzip@mail.ownsync.at>
 ENV WWW_ROOT /var/www/html
 ENV OC_VERS owncloud-8.0.2
 ENV BIN_ROOT /var/www/bin
+ENV SSL_ROOT /var/www/ssl
+ENV APACHE_ENABLE /etc/apache2/sites-enabled
+ENV APACHE_AVAIL /etc/apache2/sites-available
 ENV APACHE_BIN /usr/sbin/apache2
 ENV PATH $PATH:$BIN_ROOT:/usr/sbin:/usr/bin:/sbin:/bin
+ENV HOST_NAME example.org
+ENV EMAIL admin@example.org
 
 COPY config/php.ini /usr/local/etc/php/php.ini
 
@@ -39,6 +44,9 @@ RUN apt-get update && apt-get install -y \
 WORKDIR $WWW_ROOT
 
 COPY ./run $BIN_ROOT/run
+COPY ssl/000-default.conf $APACHE_ENABLE/000-default.conf
+COPY ssl/default.conf $APACHE_AVAIL/default.conf
+COPY ssl/default-ssl.conf $APACHE_AVAIL/default-ssl.conf
 
 EXPOSE 80 443
 

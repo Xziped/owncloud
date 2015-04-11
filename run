@@ -10,17 +10,7 @@ create_cert() {
 	echo "found exsisting server key"
 	else
 	openssl genrsa -out ${SSL_ROOT}/server.key 4096
-openssl req -new -key ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.csr <<EOT
-AT
-AT
-Vienna
-owncloud
-apache
-$HOST_NAME
-$EMAIL
-.
-.
-EOT
+	openssl req -subj "/CN=${HOST_NAME}/C=AT" -new -key ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.csr
 	openssl x509 -req -days 365 -in ${SSL_ROOT}/server.csr -signkey ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.crt
 	chmod 400 ${SSL_ROOT}/server.key
 	fi

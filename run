@@ -3,25 +3,26 @@ set -e
 
 create_cert() {
 
-	if [ ! -d $SSL_ROOT ]; then
-	mkdir -p $SSL_ROOT
-	if [ -a $SSL_ROOT/server.key ]; then
+	if [ ! -d ${SSL_ROOT} ]; then
+	mkdir -p ${SSL_ROOT}
+	else
+	if [ -a ${SSL_ROOT}/server.key ]; then
 	echo "found exsisting server key"
 	else
-	openssl genrsa -out $SSL_ROOT/server.key 4096
-	openssl req -new -key $SSL_ROOT/server.key -out $SSL_ROOT/server.csr <<EOT
-	AT
-	AT
-	Vienna
-	owncloud
-	apache
-	$HOST_NAME
-	$EMAIL
-	.
-	.
+	openssl genrsa -out ${SSL_ROOT}/server.key 4096
+openssl req -new -key ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.csr <<EOT
+AT
+AT
+Vienna
+owncloud
+apache
+$HOST_NAME
+$EMAIL
+.
+.
 EOT
-	openssl x509 -req -days 365 -in $SSL_ROOT/server.csr -signkey $SSL_ROOT/server.key -out $SSL_ROOT/server.crt
-	chmod 400 $SSL_ROOT/server.key
+	openssl x509 -req -days 365 -in ${SSL_ROOT}/server.csr -signkey ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.crt
+	chmod 400 ${SSL_ROOT}/server.key
 	fi
 	fi
 	a2enmod ssl
@@ -33,17 +34,17 @@ case "$@" in
     start)
 	
 	create_cert
-	if [ -d $WWW_ROOT/owncloud/data ]; then
+	if [ -d ${WWW_ROOT}/owncloud/data ]; then
 	echo "found exsisting data-volume"
 	else
         echo "downloading and installing owncloud..."
-	wget --no-check-certificate https://download.owncloud.org/community/$OC_VERS.zip
-	unzip $OC_VERS.zip
-	rm -f $OC_VERS.zip
-	mkdir -p $WWW_ROOT/owncloud/data
-	chown -R www-data:www-data $WWW_ROOT/owncloud/data
+	wget --no-check-certificate https://download.owncloud.org/community/${OC_VERS}.zip
+	unzip ${OC_VERS}.zip
+	rm -f ${OC_VERS}.zip
+	mkdir -p ${WWW_ROOT}/owncloud/data
+	chown -R www-data:www-data ${WWW_ROOT}/owncloud/data
 	fi
-	exec $APACHE_BIN "-D FOREGROUND" &
+	exec ${APACHE_BIN} "-D FOREGROUND" &
 	exec "/bin/bash"
 	child=$!
         wait $child

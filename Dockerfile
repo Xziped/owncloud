@@ -59,7 +59,7 @@ RUN sed -i "s,WWW_ROOT,$WWW_ROOT,g" $APACHE_AVAIL/default.conf \
 COPY ssl/default-ssl.conf $APACHE_AVAIL/default-ssl.conf
 RUN sed -i "s,WWW_ROOT,$WWW_ROOT,g" $APACHE_AVAIL/default-ssl.conf \
 && sed -i "s,SSL_ROOT,$SSL_ROOT,g" $APACHE_AVAIL/default-ssl.conf \
-&& sed -i "s,HOST_NAME,$HOST_NAME,g" $APACHE_AVAIL/default-ssl.conf
+&& sed -i "s,EMAIL,$EMAIL,g" $APACHE_AVAIL/default-ssl.conf
 
 EXPOSE 443
 

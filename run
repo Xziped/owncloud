@@ -10,12 +10,57 @@ create_cert() {
 	echo "found exsisting server key"
 	else
 	openssl genrsa -out ${SSL_ROOT}/server.key 4096
-	openssl req -subj "/CN=${HOST_NAME}/C=AT" -new -key ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.csr
+	openssl req -subj "/CN=${HOST_NAME}/OU=apache/O=owncloud/L=Vienna/ST=AT/C=AT/emailAddress=${EMAIL}" -new -key ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.csr
 	openssl x509 -req -days 365 -in ${SSL_ROOT}/server.csr -signkey ${SSL_ROOT}/server.key -out ${SSL_ROOT}/server.crt
 	chmod 400 ${SSL_ROOT}/server.key
 	fi
 	fi
 	a2enmod ssl
+
+}
+
+install_git() {
+
+	exec apt-get "install git -y"
+	git clone https://github.com/owncloud/core.git ${WWW_ROOT}/owncloud
+	git clone https://github.com/owncloud/3rdparty.git ${WWW_ROOT}/owncloud/3rdparty
+	git clone https://github.com/owncloud/apps.git ${WWW_ROOT}/owncloud/apps
+	git clone https://github.com/owncloud/gallery.git ${WWW_ROOT}/owncloud/apps/gallery
+	git clone https://github.com/owncloud/mail.git ${WWW_ROOT}/owncloud/apps/mail
+	git clone https://github.com/owncloud/contacts.git ${WWW_ROOT}/owncloud/apps/contacts
+	git clone https://github.com/owncloud/activity.git ${WWW_ROOT}/owncloud/apps/activity
+	git clone https://github.com/owncloud/updater.git ${WWW_ROOT}/owncloud/apps/updater
+	git clone https://github.com/owncloud/videos.git ${WWW_ROOT}/owncloud/apps/videos
+	git clone https://github.com/owncloud/files_texteditor.git ${WWW_ROOT}/owncloud/apps/files_texteditor
+	git clone https://github.com/owncloud/calendar.git ${WWW_ROOT}/owncloud/apps/calendar
+	git clone https://github.com/owncloud/notes.git ${WWW_ROOT}/owncloud/apps/notes
+	git clone https://github.com/owncloud/firstrunwizard.git ${WWW_ROOT}/owncloud/apps/firstrunwizard
+	git clone https://github.com/owncloud/search_lucene.git ${WWW_ROOT}/owncloud/apps/search_lucene
+	git clone https://github.com/owncloud/design.git ${WWW_ROOT}/owncloud/apps/design
+	git clone https://github.com/owncloud/tasks.git ${WWW_ROOT}/owncloud/apps/tasks
+	git clone https://github.com/owncloud/music.git ${WWW_ROOT}/owncloud/apps/music
+	git clone https://github.com/owncloud/bookmarks.git ${WWW_ROOT}/owncloud/apps/bookmarks
+	git clone https://github.com/owncloud/chat.git ${WWW_ROOT}/owncloud/apps/chat
+	git clone https://github.com/owncloud/mozilla_sync.git ${WWW_ROOT}/owncloud/apps/mozilla_sync
+	git clone https://github.com/owncloud/files_locking.git ${WWW_ROOT}/owncloud/apps/files_locking
+	git clone https://github.com/owncloud/documents.git ${WWW_ROOT}/owncloud/apps/documents
+	git clone https://github.com/owncloud/files_pdfviewer.git ${WWW_ROOT}/owncloud/apps/files_pdfviewer
+	git clone https://github.com/owncloud/maps.git ${WWW_ROOT}/owncloud/apps/maps
+
+}
+
+update_git() {
+	
+	find . -maxdepth 4 -type d -name .git -exec sh -c 'cd "{}"/../ && pwd && git pull --rebase' \;
+
+}
+
+install_zip() {
+
+	echo "downloading and installing owncloud..."
+	wget --no-check-certificate https://download.owncloud.org/community/${OC_VERS}.zip
+	unzip ${OC_VERS}.zip
+	rm -f ${OC_VERS}.zip
 
 }
 
@@ -27,10 +72,11 @@ case "$@" in
 	if [ -d ${WWW_ROOT}/owncloud/data ]; then
 	echo "found exsisting data-volume"
 	else
-        echo "downloading and installing owncloud..."
-	wget --no-check-certificate https://download.owncloud.org/community/${OC_VERS}.zip
-	unzip ${OC_VERS}.zip
-	rm -f ${OC_VERS}.zip
+	if [ "${GIT_ENABLE}" == "false"]; then
+	install_zip
+	else
+	install_git
+	fi
 	mkdir -p ${WWW_ROOT}/owncloud/data
 	chown -R www-data:www-data ${WWW_ROOT}/owncloud/data
 	fi
@@ -42,6 +88,9 @@ case "$@" in
     ;;
     cert)
 	create_cert
+    ;;
+    update)
+	update_git
     ;;
     shell)
         exec "/bin/bash"

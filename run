@@ -72,7 +72,7 @@ case "$@" in
 	if [ -d ${WWW_ROOT}/owncloud/data ]; then
 	echo "found exsisting data-volume"
 	else
-	if [ "${GIT_ENABLE}" == "false"]; then
+	if [ "${GIT_ENABLE}" == "false" ]; then
 	install_zip
 	else
 	install_git

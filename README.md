@@ -24,7 +24,7 @@ mkdir -p /opt/owncloud/ssl
 
 ## run ownCloud with SSL (selfsigned certs) and linked MySQL 
 ```
-docker run -dit -p 443:443 --name owncloud -v /opt/owncloud/http:/var/www/html/owncloud -v /opt/owncloud/ssl:/var/www/ssl --link mysql_owncloud:mysql xziped/owncloud
+docker run -dit -p 443:443 --name owncloud -v /opt/owncloud/http:/var/www/html -v /opt/owncloud/ssl:/var/www/ssl --link mysql_owncloud:mysql xziped/owncloud
 ```
 
 ## Variables
@@ -54,7 +54,7 @@ docker run -dit --link mysql_owncloud:mysql xziped/owncloud
 ### Set some Variables
 Run on Hostport 443 with name owncloud. Change Host_Name and EMAIL for Certificate. Enable Source Download from Git . Make data for owncloud and certificates persistent.
 ```
-docker run -dit -p 443:443 --name owncloud -e HOST_NAME=example.com -e EMAIL=webmaster@example.com -e GIT_ENABLE=true -v /opt/owncloud/http:/var/www/html/owncloud -v /opt/owncloud/ssl:/var/www/ssl --link mysql_owncloud:mysql xziped/owncloud
+docker run -dit -p 443:443 --name owncloud -e HOST_NAME=example.com -e EMAIL=webmaster@example.com -e GIT_ENABLE=true -v /opt/owncloud/http:/var/www/html -v /opt/owncloud/ssl:/var/www/ssl --link mysql_owncloud:mysql xziped/owncloud
 ```
 ### Update OwnCloud Git Repository
 ```

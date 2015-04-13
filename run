@@ -21,7 +21,7 @@ create_cert() {
 
 install_git() {
 
-	exec apt-get "install git -y"
+	apt-get --assume-yes install git
 	git clone https://github.com/owncloud/core.git ${WWW_ROOT}/owncloud
 	git clone https://github.com/owncloud/3rdparty.git ${WWW_ROOT}/owncloud/3rdparty
 	git clone https://github.com/owncloud/apps.git ${WWW_ROOT}/owncloud/apps

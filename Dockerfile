@@ -12,6 +12,7 @@ ENV PATH $PATH:$BIN_ROOT:/usr/sbin:/usr/bin:/sbin:/bin
 ENV HOST_NAME example.org
 ENV EMAIL admin@example.org
 ENV GIT_ENABLE false
+ENV GIT_BIN /usr/bin/git
 
 COPY config/php.ini /usr/local/etc/php/php.ini
 
